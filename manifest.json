@@ -1,0 +1,24 @@
+{
+    "manifest_version": 2.0,
+    "id": "urlviewer",
+    "type": "widget",
+    "name": "URL Viewer",
+    "namespace": "UrlNamespace",
+    "version": "1.0",
+    "author": "Redes Tecnologia",
+    "description": "Widget Zabbix que exibe um site através de uma Url.",
+    "widget": {
+        "js_class": "WidgetUrlView",
+        "view": "class.widget"
+    },
+    "assets": {
+        "js": [
+            "class.widget.php.js"
+        ]
+    },
+    "homepage": "https://redestecnologia.com.br",
+    "support": {
+        "email": "monitoramento@redestecnologia.com.br",
+        "url": "https://redestecnologia.com.br"
+    }
+}
