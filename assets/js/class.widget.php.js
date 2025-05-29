@@ -167,7 +167,6 @@ class WidgetUrlView extends CWidget {
     }
 
 
-
     escapeHtml(unsafe) {
         if (typeof unsafe !== 'string') {
             console.warn("escapeHtml recebeu um valor não-string:", unsafe);
