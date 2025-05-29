@@ -45,7 +45,7 @@ class WidgetUrlView extends CWidget {
                     box-sizing: border-box;
                     flex-shrink: 0;
                     transition: background-color 0.3s ease, padding 0.3s ease, border 0.3s ease, box-shadow 0.3s ease, max-width 0.3s ease;
-                    height: auto;
+                     height: auto;
                 }
                 .url-content-box h2 { margin-top: 0; margin-bottom: 15px; color: #ffffff; font-size: 18px; }
                 .url-content-box p { font-size: 14px; color: #ffffff; margin-bottom: 25px; }
@@ -113,7 +113,6 @@ class WidgetUrlView extends CWidget {
         }
 
         if (url) {
-            // Garante que a URL tenha um protocolo
             if (!url.toLowerCase().startsWith('http://') && !url.toLowerCase().startsWith('https://')) {
                 url = 'http://' + url;
             }
@@ -129,36 +128,45 @@ class WidgetUrlView extends CWidget {
             contentBox.style.height = '100%';
             contentBox.style.display = 'flex';
             contentBox.style.flexDirection = 'column';
-            contentBox.style.justifyContent = 'stretch';
-            contentBox.style.alignItems = 'stretch';
+            contentBox.style.justifyContent = 'center';
+            contentBox.style.alignItems = 'center';
 
             container.style.padding = '0';
             container.style.alignItems = 'stretch';
 
-            const iframe = document.createElement('iframe');
-            iframe.src = url;
-            iframe.title = 'Visualização da URL: ' + this.escapeHtml(this._urlInput.value.trim()); // Usa o valor original para o título
-            // Adiciona sandbox para aumentar a segurança, se desejado. Cuidado com restrições.
-            // iframe.sandbox = 'allow-forms allow-scripts allow-same-origin allow-popups allow-presentation';
+            const img = document.createElement('img');
+            img.style.maxWidth = '100%';
+            img.style.maxHeight = '100%';
+            img.style.objectFit = 'contain';
+            img.alt = 'Snapshot da câmera';
+            contentBox.appendChild(img);
 
+            //tualiza a imagem a cada 1 segundo
+            const updateInterval = 1000; // milissegundos
 
-            // Tenta tratar erros de carregamento do iframe (nem sempre funciona devido a restrições de segurança)
-            iframe.onerror = () => {
-                contentBox.innerHTML = '<p style="color:white;padding:20px;">Não foi possível carregar a URL. Verifique o endereço ou as permissões de CORS.</p>';
-                 // Restaura alguns estilos para a mensagem de erro
-                contentBox.style.padding = '20px';
-                contentBox.style.backgroundColor = '#1e1e1e';
-                contentBox.style.border = '1px solid #333';
-                container.style.padding = '20px';
-
+            // Função para atualizar a imagem
+            const updateImage = () => {
+                img.src = url + '?_=' + new Date().getTime(); // Cache buster
             };
 
-            contentBox.appendChild(iframe);
+            // Começa a atualizar
+            updateImage();
+            const intervalId = setInterval(updateImage, updateInterval);
+
+            //impa o intervalo se o usuário quiser mudar a URL
+            this._openButton.addEventListener('click', () => clearInterval(intervalId));
+            this._urlInput.addEventListener('keypress', (event) => {
+                if (event.key === 'Enter') {
+                    clearInterval(intervalId);
+                }
+            });
 
         } else {
             alert('Por favor, digite uma URL válida.');
         }
     }
+
+
 
     escapeHtml(unsafe) {
         if (typeof unsafe !== 'string') {
