@@ -40,13 +40,14 @@ class WidgetUrlView extends CWidget {
 
         contentBox.innerHTML = '';
 
-        const iframe = document.createElement('iframe');
-        iframe.src = url;
-        iframe.style.width = '100%';
-        iframe.style.height = '100%';
-        iframe.style.border = 'none';
+        const img = document.createElement('img');
+        img.src = url;
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'contain';
+        img.alt = 'Camera Stream';
 
-        contentBox.appendChild(iframe);
+        contentBox.appendChild(img);
     }
 }
 
