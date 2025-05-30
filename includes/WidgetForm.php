@@ -47,7 +47,7 @@ class WidgetForm extends CWidgetForm
                     ->setFlags(CWidgetField::FLAG_NOT_EMPTY | CWidgetField::FLAG_LABEL_ASTERISK)
             )*/
             ->addField(
-                (new CWidgetFieldTextBox('token', _('Token')))
+                (new CWidgetFieldTextBox('url', _('URL')))
                     ->setFlags(CWidgetField::FLAG_NOT_EMPTY | CWidgetField::FLAG_LABEL_ASTERISK)
             )
             /*->addField(
