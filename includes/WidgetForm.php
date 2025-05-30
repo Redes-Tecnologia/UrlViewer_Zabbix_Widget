@@ -18,7 +18,7 @@
 ** Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-namespace Modules\OpenAI\Includes;
+namespace Modules\URLViewerTeste\Includes;
 
 use Zabbix\Widgets\CWidgetField;
 use Zabbix\Widgets\CWidgetForm;

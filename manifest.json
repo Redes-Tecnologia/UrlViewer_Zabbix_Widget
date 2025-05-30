@@ -3,7 +3,7 @@
     "id": "urlviewer",
     "type": "widget",
     "name": "URL Viewer Teste",
-    "namespace": "OpenAI",
+    "namespace": "URLViewerTeste",
     "version": "1.0",
     "author": "Redes Tecnologia",
     "url": "https://www.redestecnologia.com.br",
