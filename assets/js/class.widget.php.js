@@ -41,27 +41,13 @@ class WidgetUrlView extends CWidget {
         contentBox.innerHTML = '';
 
         const img = document.createElement('img');
-        img.style.maxWidth = '100%';
-        img.style.maxHeight = '100%';
+        img.src = url; // MJPEG stream direto
+        img.style.width = '100%';
+        img.style.height = '100%';
         img.style.objectFit = 'contain';
-        img.alt = 'Imagem da URL';
+        img.alt = 'Stream da câmera';
 
         contentBox.appendChild(img);
-
-        const updateInterval = 500;
-
-        const updateImage = () => {
-            img.src = url + '?_=' + new Date().getTime(); // Cache buster
-        };
-
-        updateImage();
-        this._intervalId = setInterval(updateImage, updateInterval);
-    }
-
-    onDestroy() {
-        if (this._intervalId) {
-            clearInterval(this._intervalId);
-        }
     }
 }
 
