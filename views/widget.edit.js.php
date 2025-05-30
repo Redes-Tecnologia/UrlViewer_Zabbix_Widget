@@ -33,7 +33,7 @@ window.widget_openai_form = new class {
 
     addLogo() {
         const el = document.createElement('div');
-        el.classList.add('initmax-free');
+        el.classList.add('logo-redes');
 
         this.#form.insertBefore(el, this.#form.firstChild);
     }
