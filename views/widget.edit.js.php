@@ -26,7 +26,7 @@ window.widget_openai_form = new class {
 
     init() {
         this.#form = document.getElementById('widget-dialogue-form');
-        this.#form.querySelector('[name="service"]')?.addEventListener('change', this.setEndpoint.bind(this));
+        //this.#form.querySelector('[name="service"]')?.addEventListener('change', this.setEndpoint.bind(this));
 
         this.addLogo();
     }
@@ -38,7 +38,7 @@ window.widget_openai_form = new class {
         this.#form.insertBefore(el, this.#form.firstChild);
     }
 
-    setEndpoint(e) {
+    /*setEndpoint(e) {
         const value = e.target.value;
 
         const endpoint = this.#form.querySelector('[name="endpoint"]');
@@ -53,5 +53,5 @@ window.widget_openai_form = new class {
             default:
                 endpoint.value = '';
         }
-    }
+    }*/
 };

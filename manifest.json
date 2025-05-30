@@ -14,7 +14,6 @@
     },
     "assets": {
         "css": [
-            "widget.css",
             "form.css"
         ],
         "js": [

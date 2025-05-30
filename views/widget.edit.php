@@ -2,25 +2,6 @@
 
 use Zabbix\Widgets\Fields\CWidgetFieldTextBox;
 
-/*
-** initMAX
-** Copyright (C) 2021-2022 initMAX s.r.o.
-**
-** This program is free software; you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation; either version 3 of the License, or
-** (at your option) any later version.
-**
-** This program is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
-**
-** You should have received a copy of the GNU General Public License
-** along with this program; if not, write to the Free Software
-** Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-**/
-
 /**
  * Problems widget form view.
  *
@@ -30,9 +11,9 @@ use Zabbix\Widgets\Fields\CWidgetFieldTextBox;
 
 (new CWidgetFormView($data))
     ->addField(
-        new CWidgetFieldTextBoxView($data['fields']['token'])
+        new CWidgetFieldTextBoxView($data['fields']['url'])
     )
-    ->addFieldset((new CWidgetFormFieldsetCollapsibleView(_('Configurações Avançadas')))
+    /*->addFieldset((new CWidgetFormFieldsetCollapsibleView(_('Configurações Avançadas')))
         ->addField(
             new CWidgetFieldSelectView($data['fields']['service'])
         )
@@ -66,7 +47,7 @@ use Zabbix\Widgets\Fields\CWidgetFieldTextBox;
                     makeHelpIcon(_('Quantas conclusões gerar para cada prompt.'), 'icon-help')
                 )
         )
-    )
+    )*/
 
     ->includeJsFile('widget.edit.js.php')
     ->addJavaScript('widget_openai_form.init();')

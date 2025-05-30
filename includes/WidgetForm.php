@@ -33,7 +33,7 @@ class WidgetForm extends CWidgetForm
 {
     public function addFields(): self {
         return $this
-            ->addField(
+            /*->addField(
                 (new CWidgetFieldSelect('service', _('Service'), [
                         0 => 'OpenAI',
                         1 => 'DeepSeek',
@@ -45,24 +45,24 @@ class WidgetForm extends CWidgetForm
                 (new CWidgetFieldTextBox('endpoint', _('Endpoint')))
                     ->setDefault('https://api.openai.com/v1/chat/completions')
                     ->setFlags(CWidgetField::FLAG_NOT_EMPTY | CWidgetField::FLAG_LABEL_ASTERISK)
-            )
+            )*/
             ->addField(
                 (new CWidgetFieldTextBox('token', _('Token')))
                     ->setFlags(CWidgetField::FLAG_NOT_EMPTY | CWidgetField::FLAG_LABEL_ASTERISK)
             )
-            ->addField(
+            /*->addField(
                 (new CWidgetFieldTextBox('model', _('Model')))
                     ->setDefault('gpt-3.5-turbo')
                     ->setFlags(CWidgetField::FLAG_NOT_EMPTY | CWidgetField::FLAG_LABEL_ASTERISK)
             )
-            /*->addField(
+            ->addField(
                 (new CWidgetFieldSelect('model', _('Model'), [
                         0 => 'GPT-3.5 Turbo',
                         1 => 'Ainda precisa ser criado',
                     ]))
                     ->setDefault(0)
                     ->setFlags(CWidgetField::FLAG_DISABLED)
-            )*/
+            )
             ->addField(
                 (new CWidgetFieldTextBox('temperature', _('Temperature')))
                     ->setDefault('1')
@@ -78,7 +78,7 @@ class WidgetForm extends CWidgetForm
             ->addField(
                 (new CWidgetFieldTextBox('n', _('N')))
                     ->setDefault('1')
-            )
+            )*/
         ;
     }
 }
