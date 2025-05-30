@@ -12,15 +12,13 @@ class WidgetUrlView extends CWidget {
         super.setContents(response);
         this._widgetBody = this._body;
         this._widgetBody.style.padding = '0';
-    }
 
-    _showContent() {
         if (!this.urlField) return;
 
-        if (!contentBox || !container) {
+        /*if (!contentBox || !container) {
             console.error("Elementos container ou contentBox não encontrados.");
             return;
-        }
+        }*/
 
         contentBox.innerHTML = '';
 
