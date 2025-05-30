@@ -1,63 +1,70 @@
 class WidgetUrlView extends CWidget {
-    urlField = this._fields.url;
-
     onInitialize() {
         super.onInitialize();
         this._widgetBody = null;
     }
 
     setContents(response) {
-        if (!this._urlInput) return;
-
         super.setContents(response);
         this._widgetBody = this._body;
         this._widgetBody.style.padding = '0';
 
-        if (!this.urlField) return;
-
-        /*if (!contentBox || !container) {
-            console.error("Elementos container ou contentBox não encontrados.");
-            return;
-        }*/
-
-        contentBox.innerHTML = '';
-
-        contentBox.style.maxWidth = 'none';
-        contentBox.style.padding = '0';
-        contentBox.style.border = 'none';
-        contentBox.style.boxShadow = 'none';
-        contentBox.style.backgroundColor = '#000';
+        const contentBox = document.createElement('div');
+        contentBox.id = 'urlContentBox';
+        contentBox.style.width = '100%';
         contentBox.style.height = '100%';
         contentBox.style.display = 'flex';
-        contentBox.style.flexDirection = 'column';
         contentBox.style.justifyContent = 'center';
         contentBox.style.alignItems = 'center';
+        contentBox.style.backgroundColor = '#000';
 
-        container.style.padding = '0';
-        container.style.alignItems = 'stretch';
+        this._widgetBody.appendChild(contentBox);
+
+        this._showContent();
+    }
+
+    _showContent() {
+        const url = this._fields.url?.trim();
+        const contentBox = this._widgetBody.querySelector('#urlContentBox');
+
+        if (!url) {
+            console.error("URL não definida no campo.");
+            contentBox.innerHTML = '<p style="color: white;">URL não configurada.</p>';
+            return;
+        }
+
+        if (!contentBox) {
+            console.error("Elemento contentBox não encontrado.");
+            return;
+        }
+
+        contentBox.innerHTML = '';
 
         const img = document.createElement('img');
         img.style.maxWidth = '100%';
         img.style.maxHeight = '100%';
         img.style.objectFit = 'contain';
-        img.alt = 'Snapshot da câmera';
+        img.alt = 'Imagem da URL';
+
         contentBox.appendChild(img);
 
-        // Atualiza a imagem a cada 1 segundo
-        const updateInterval = 1000; // milissegundos
+        const updateInterval = 1000;
 
-        // Função para atualizar a imagem
         const updateImage = () => {
             img.src = url + '?_=' + new Date().getTime(); // Cache buster
         };
 
-        // Começa a atualizar
         updateImage();
-        setInterval(updateImage, updateInterval);
+        this._intervalId = setInterval(updateImage, updateInterval);
+    }
 
+    onDestroy() {
+        if (this._intervalId) {
+            clearInterval(this._intervalId);
+        }
     }
 }
 
 if (typeof addWidgetClass === 'function') {
-    addWidgetClass(WidgetUrlView); // Se você renomear a classe, atualize aqui também
+    addWidgetClass(WidgetUrlView);
 }
