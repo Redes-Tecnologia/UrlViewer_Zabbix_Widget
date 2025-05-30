@@ -48,7 +48,7 @@ class WidgetUrlView extends CWidget {
 
         contentBox.appendChild(img);
 
-        const updateInterval = 800;
+        const updateInterval = 500;
 
         const updateImage = () => {
             img.src = url + '?_=' + new Date().getTime(); // Cache buster
