@@ -2,16 +2,21 @@
     "manifest_version": 2.0,
     "id": "urlviewer",
     "type": "widget",
-    "name": "URL Viewer",
-    "namespace": "UrlNamespace",
+    "name": "URL Viewer Teste",
+    "namespace": "OpenAI",
     "version": "1.0",
     "author": "Redes Tecnologia",
+    "url": "https://www.redestecnologia.com.br",
     "description": "Widget Zabbix que exibe um site através de uma Url.",
     "widget": {
         "js_class": "WidgetUrlView",
         "view": "class.widget"
     },
     "assets": {
+        "css": [
+            "widget.css",
+            "form.css"
+        ],
         "js": [
             "class.widget.php.js"
         ]
