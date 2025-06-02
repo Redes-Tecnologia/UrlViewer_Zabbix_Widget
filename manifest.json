@@ -1,13 +1,13 @@
 {
     "manifest_version": 2.0,
-    "id": "urlviewer",
+    "id": "snapshotCamera",
     "type": "widget",
-    "name": "URL Viewer Teste",
-    "namespace": "URLViewerTeste",
+    "name": "CFTV - SNAPSHOT",
+    "namespace": "CFTVsnapshot",
     "version": "1.0",
     "author": "Redes Tecnologia",
     "url": "https://www.redestecnologia.com.br",
-    "description": "Widget Zabbix que exibe um site através de uma Url.",
+    "description": "Widget Zabbix que exibe as imagens atualizadas do sistema CFTV.",
     "widget": {
         "js_class": "WidgetUrlView",
         "view": "class.widget"

@@ -11,7 +11,34 @@ use Zabbix\Widgets\Fields\CWidgetFieldTextBox;
 
 (new CWidgetFormView($data))
     ->addField(
-        new CWidgetFieldTextBoxView($data['fields']['url'])
+        (new CWidgetFieldTextBoxView($data['fields']['serverIP']))
+        ->setFieldHint(
+                    makeHelpIcon(_('Endereço de IP do servidor que roda o script serverCAMbbix'), 'icon-help')
+                )
+    )
+    ->addField(
+        (new CWidgetFieldTextBoxView($data['fields']['serverPort']))
+        ->setFieldHint(
+                    makeHelpIcon(_('Porta do servidor dedicada ao script serverCAMbbix'), 'icon-help')
+                )
+    )
+    ->addField(
+        (new CWidgetFieldTextBoxView($data['fields']['cameraIP']))
+        ->setFieldHint(
+                    makeHelpIcon(_('Endereço IP da câmera'), 'icon-help')
+                )
+    )
+    ->addField(
+        (new CWidgetFieldTextBoxView($data['fields']['user']))
+        ->setFieldHint(
+                    makeHelpIcon(_('Usuário cadastrado para acessar a câmera'), 'icon-help')
+                )
+    )
+    ->addField(
+        (new CWidgetFieldTextBoxView($data['fields']['password']))
+        ->setFieldHint(
+                    makeHelpIcon(_('Senha cadastrada para acessar a câmera'), 'icon-help')
+                )
     )
     /*->addFieldset((new CWidgetFormFieldsetCollapsibleView(_('Configurações Avançadas')))
         ->addField(

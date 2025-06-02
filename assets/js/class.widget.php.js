@@ -24,12 +24,19 @@ class WidgetUrlView extends CWidget {
     }
 
     _showContent() {
-        const url = this._fields.url?.trim();
+        const serverIP = this._fields.serverIP?.trim();
+        const serverPort = this._fields.serverPort?.trim();
+        const cameraIP = this._fields.cameraIP?.trim();
+        const user = this._fields.user?.trim();
+        const password = this._fields.password?.trim();
+
         const contentBox = this._widgetBody.querySelector('#urlContentBox');
 
-        if (!url) {
-            console.error("URL não definida no campo.");
-            contentBox.innerHTML = '<p style="color: white;">URL não configurada.</p>';
+        if (!serverIP || !serverPort || !cameraIP || !user || !password) {
+            console.error("Campos obrigatórios não preenchidos.");
+            if (contentBox) {
+                contentBox.innerHTML = '<p style="color: white;">Campos obrigatórios não configurados.</p>';
+            }
             return;
         }
 
@@ -39,6 +46,8 @@ class WidgetUrlView extends CWidget {
         }
 
         contentBox.innerHTML = '';
+
+        const url = `http://${serverIP}:${serverPort}/camera_stream?ip=${cameraIP}&user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`;
 
         const img = document.createElement('img');
         img.style.maxWidth = '100%';
