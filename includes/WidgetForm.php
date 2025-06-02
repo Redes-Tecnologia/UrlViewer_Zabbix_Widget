@@ -1,22 +1,4 @@
 <?php
-/*
-** initMAX
-** Copyright (C) 2021-2022 initMAX s.r.o.
-**
-** This program is free software; you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation; either version 3 of the License, or
-** (at your option) any later version.
-**
-** This program is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
-**
-** You should have received a copy of the GNU General Public License
-** along with this program; if not, write to the Free Software
-** Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-**/
 
 namespace Modules\URLViewerTeste\Includes;
 
@@ -47,7 +29,28 @@ class WidgetForm extends CWidgetForm
                     ->setFlags(CWidgetField::FLAG_NOT_EMPTY | CWidgetField::FLAG_LABEL_ASTERISK)
             )*/
             ->addField(
-                (new CWidgetFieldTextBox('url', _('URL')))
+                (new CWidgetFieldTextBox('tipo', _('Tipo do vídeo')))
+                    ->setDefault('mjpeg')
+                    ->setFlags(CWidgetField::FLAG_NOT_EMPTY | CWidgetField::FLAG_LABEL_ASTERISK)
+            )
+            ->addField(
+                (new CWidgetFieldTextBox('serverIP', _('IP do servidor')))
+                    ->setFlags(CWidgetField::FLAG_NOT_EMPTY | CWidgetField::FLAG_LABEL_ASTERISK)
+            )
+            ->addField(
+                (new CWidgetFieldTextBox('serverPort', _('Porta do servidor')))
+                    ->setFlags(CWidgetField::FLAG_NOT_EMPTY | CWidgetField::FLAG_LABEL_ASTERISK)
+            )
+            ->addField(
+                (new CWidgetFieldTextBox('cameraIP', _('IP da câmera')))
+                    ->setFlags(CWidgetField::FLAG_NOT_EMPTY | CWidgetField::FLAG_LABEL_ASTERISK)
+            )
+            ->addField(
+                (new CWidgetFieldTextBox('user', _('Usuário')))
+                    ->setFlags(CWidgetField::FLAG_NOT_EMPTY | CWidgetField::FLAG_LABEL_ASTERISK)
+            )
+            ->addField(
+                (new CWidgetFieldTextBox('password', _('Senha')))
                     ->setFlags(CWidgetField::FLAG_NOT_EMPTY | CWidgetField::FLAG_LABEL_ASTERISK)
             )
             /*->addField(
