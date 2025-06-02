@@ -50,7 +50,7 @@ class WidgetUrlView extends CWidget {
 
         const url = `http://${serverIP}:${serverPort}/camera_stream?ip=${cameraIP}&user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}&tipo=mjpeg`;
 
-        console.log("Campos:", { tipo, serverIP, serverPort, cameraIP, user, password });
+        console.log("Campos:", {serverIP, serverPort, cameraIP, user, password });
         console.log("URL gerada:", url);
 
         const img = document.createElement('img');
