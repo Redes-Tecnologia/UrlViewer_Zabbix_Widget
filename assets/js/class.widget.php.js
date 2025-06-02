@@ -1,4 +1,4 @@
-class WidgetUrlView extends CWidget {
+class WidgetCFTVSnapshot extends CWidget {
     onInitialize() {
         super.onInitialize();
         this._widgetBody = null;
@@ -75,5 +75,5 @@ class WidgetUrlView extends CWidget {
 }
 
 if (typeof addWidgetClass === 'function') {
-    addWidgetClass(WidgetUrlView);
+    addWidgetClass(WidgetCFTVSnapshot);
 }

@@ -9,7 +9,7 @@
     "url": "https://www.redestecnologia.com.br",
     "description": "Widget Zabbix que exibe as imagens atualizadas do sistema CFTV.",
     "widget": {
-        "js_class": "WidgetUrlView",
+        "js_class": "WidgetCFTVSnapshot",
         "view": "class.widget"
     },
     "assets": {
