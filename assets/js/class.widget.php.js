@@ -24,7 +24,7 @@ class WidgetUrlView extends CWidget {
     }
 
     _showContent() {
-        const tipo = this._fields.tipo?.trim();
+        const tipo = this._fields.tipo?.trim() || 'mjpeg';
         const serverIP = this._fields.serverIP?.trim();
         const serverPort = this._fields.serverPort?.trim();
         const cameraIP = this._fields.cameraIP?.trim();
