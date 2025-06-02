@@ -8,7 +8,7 @@ window.widget_openai_form = new class {
 
     init() {
         this.#form = document.getElementById('widget-dialogue-form');
-        this.#form.querySelector('[name="tipo"]')?.addEventListener('change', this.setTipo.bind(this));
+        //this.#form.querySelector('[name="tipo"]')?.addEventListener('change', this.setTipo.bind(this));
 
         this.addLogo();
     }
@@ -36,21 +36,4 @@ window.widget_openai_form = new class {
                 endpoint.value = '';
         }
     }*/
-
-    setTipo(e) {
-        const value = e.target.value;
-
-        const tipo = this.#form.querySelector('[name="tipo"]');
-
-        switch(value) {
-            case '0':
-                tipo.value = 'mjpeg';
-                break;
-            case '1':
-                tipo.value = 'mjpg';
-                break;
-            default:
-                tipo.value = '';
-        }
-    }
 };

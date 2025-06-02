@@ -29,9 +29,12 @@ class WidgetForm extends CWidgetForm
                     ->setFlags(CWidgetField::FLAG_NOT_EMPTY | CWidgetField::FLAG_LABEL_ASTERISK)
             )*/
             ->addField(
-                (new CWidgetFieldTextBox('tipo', _('Tipo do vídeo')))
-                    ->setDefault('mjpeg')
-                    ->setFlags(CWidgetField::FLAG_NOT_EMPTY | CWidgetField::FLAG_LABEL_ASTERISK)
+                (new CWidgetFieldSelect('tipo', _('Tipo do vídeo'), [
+                        0 => 'mjpeg',
+                        1 => 'mjpg',
+                    ]))
+                    ->setDefault(0)
+                    ->setFlags(CWidgetField::FLAG_LABEL_ASTERISK)
             )
             ->addField(
                 (new CWidgetFieldTextBox('serverIP', _('IP do servidor')))

@@ -41,7 +41,7 @@ use Zabbix\Widgets\Fields\CWidgetFieldTextBox;
                 )
     )
     ->addField(
-        new CWidgetFieldTextBoxView($data['fields']['tipo'])
+        new CWidgetFieldSelectView($data['fields']['tipo'])
     )
     /*->addFieldset((new CWidgetFormFieldsetCollapsibleView(_('Configurações Avançadas')))
         ->addField(
