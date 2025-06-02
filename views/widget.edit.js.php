@@ -8,7 +8,7 @@ window.widget_openai_form = new class {
 
     init() {
         this.#form = document.getElementById('widget-dialogue-form');
-        this.#form.querySelector('[name="service"]')?.addEventListener('change', this.setTipo.bind(this));
+        this.#form.querySelector('[name="tipo"]')?.addEventListener('change', this.setTipo.bind(this));
 
         this.addLogo();
     }
