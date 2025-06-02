@@ -24,7 +24,7 @@ class WidgetUrlView extends CWidget {
     }
 
     _showContent() {
-        const tipo = this._fields.tipo?.trim() || 'mjpeg';
+        //const tipo = this._fields.tipo?.trim() || 'mjpeg';
         const serverIP = this._fields.serverIP?.trim();
         const serverPort = this._fields.serverPort?.trim();
         const cameraIP = this._fields.cameraIP?.trim();
@@ -48,7 +48,7 @@ class WidgetUrlView extends CWidget {
 
         contentBox.innerHTML = '';
 
-        const url = `http://${serverIP}:${serverPort}/camera_stream?ip=${cameraIP}&user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}&tipo=${encodeURIComponent(tipo)}`;
+        const url = `http://${serverIP}:${serverPort}/camera_stream?ip=${cameraIP}&user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}&tipo=mjpeg`;
 
         console.log("Campos:", { tipo, serverIP, serverPort, cameraIP, user, password });
         console.log("URL gerada:", url);
