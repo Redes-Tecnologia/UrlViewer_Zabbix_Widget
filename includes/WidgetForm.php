@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\URLViewerTeste\Includes;
+namespace Modules\CFTVmjpeg\Includes;
 
 use Zabbix\Widgets\CWidgetField;
 use Zabbix\Widgets\CWidgetForm;
