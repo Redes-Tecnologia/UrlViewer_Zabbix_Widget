@@ -57,10 +57,10 @@ class WidgetCFTVSnapshot extends CWidget {
 
         contentBox.appendChild(img);
 
-        const updateInterval = 500;
+        const updateInterval = 1000;
 
         const updateImage = () => {
-            img.src = url + '?_=' + new Date().getTime(); // Cache buster
+            img.src = url + '&_=' + new Date().getTime(); // Cache buster
         };
 
         updateImage();
