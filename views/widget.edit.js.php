@@ -44,7 +44,7 @@ window.widget_openai_form = new class {
 
         switch(value) {
             case '0':
-                tipo.value = 'mjepg';
+                tipo.value = 'mjpeg';
                 break;
             case '1':
                 tipo.value = 'mjpg';
