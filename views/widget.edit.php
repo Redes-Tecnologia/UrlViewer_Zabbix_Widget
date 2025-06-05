@@ -25,19 +25,25 @@ use Zabbix\Widgets\Fields\CWidgetFieldTextBox;
     ->addField(
         (new CWidgetFieldTextBoxView($data['fields']['cameraIP']))
         ->setFieldHint(
-                    makeHelpIcon(_('Endereço IP da câmera'), 'icon-help')
+                    makeHelpIcon(_('Endereço IP da câmera/NVR'), 'icon-help')
+                )
+    )
+    ->addField(
+        (new CWidgetFieldTextBoxView($data['fields']['channel']))
+        ->setFieldHint(
+                    makeHelpIcon(_('Número que indica o canal de transmissão da câmera. Para uma câmera simples o padrão é 1. Já para NVRs pode variar de acordo com o número de portas do mesmo'), 'icon-help')
                 )
     )
     ->addField(
         (new CWidgetFieldTextBoxView($data['fields']['user']))
         ->setFieldHint(
-                    makeHelpIcon(_('Usuário cadastrado para acessar a câmera'), 'icon-help')
+                    makeHelpIcon(_('Usuário cadastrado para acessar a câmera/NVR'), 'icon-help')
                 )
     )
     ->addField(
         (new CWidgetFieldTextBoxView($data['fields']['password']))
         ->setFieldHint(
-                    makeHelpIcon(_('Senha cadastrada para acessar a câmera'), 'icon-help')
+                    makeHelpIcon(_('Senha cadastrada para acessar a câmera/NVR'), 'icon-help')
                 )
     )
     ->addField(

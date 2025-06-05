@@ -45,7 +45,11 @@ class WidgetForm extends CWidgetForm
                     ->setFlags(CWidgetField::FLAG_NOT_EMPTY | CWidgetField::FLAG_LABEL_ASTERISK)
             )
             ->addField(
-                (new CWidgetFieldTextBox('cameraIP', _('IP da câmera')))
+                (new CWidgetFieldTextBox('cameraIP', _('IP da câmera/NVR')))
+                    ->setFlags(CWidgetField::FLAG_NOT_EMPTY | CWidgetField::FLAG_LABEL_ASTERISK)
+            )
+            ->addField(
+                (new CWidgetFieldTextBox('channel', _('Canal de transmissão')))
                     ->setFlags(CWidgetField::FLAG_NOT_EMPTY | CWidgetField::FLAG_LABEL_ASTERISK)
             )
             ->addField(

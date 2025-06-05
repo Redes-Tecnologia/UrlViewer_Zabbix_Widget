@@ -28,12 +28,13 @@ class WidgetUrlView extends CWidget {
         const serverIP = this._fields.serverIP?.trim();
         const serverPort = this._fields.serverPort?.trim();
         const cameraIP = this._fields.cameraIP?.trim();
+        const channel = this._fields.channel?.trim();
         const user = this._fields.user?.trim();
         const password = this._fields.password?.trim();
 
         const contentBox = this._widgetBody.querySelector('#urlContentBox');
 
-        if (!serverIP || !serverPort || !cameraIP || !user || !password) {
+        if (!serverIP || !serverPort || !cameraIP || !user || !password || !channel) {
             console.error("Campos obrigatórios não preenchidos.");
             if (contentBox) {
                 contentBox.innerHTML = '<p style="color: white;">Campos obrigatórios não configurados.</p>';
@@ -51,7 +52,7 @@ class WidgetUrlView extends CWidget {
 
         contentBox.innerHTML = '';
 
-        const url = `http://${serverIP}:${serverPort}/camera_stream?ip=${cameraIP}&user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}&tipo=${encodeURIComponent(tipo)}`;
+        const url = `http://${serverIP}:${serverPort}/camera_stream?ip=${cameraIP}&user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}&tipo=${encodeURIComponent(tipo)}&channel=${channel}`;
 
         const img = document.createElement('img');
         img.src = url;
