@@ -52,7 +52,7 @@ class WidgetUrlView extends CWidget {
 
         contentBox.innerHTML = '';
 
-        const url = `http://${serverIP}:${serverPort}/camera_stream?ip=${cameraIP}&user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}&tipo=${encodeURIComponent(tipo)}&channel=${channel}`;
+        const url = `https://${serverIP}/camera_stream?ip=${cameraIP}&user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}&tipo=${encodeURIComponent(tipo)}&channel=${channel}`;
 
         const img = document.createElement('img');
         img.src = url;
