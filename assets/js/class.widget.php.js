@@ -1,10 +1,9 @@
 class WidgetUrlView extends CWidget {
-    // Variável privada para armazenar o ID do timeout para o stream ao vivo
-    _liveStreamTimeoutId = null;
-
     // Variável estática para rastrear a instância do widget de stream ao vivo atualmente ativa.
     // Isso garante que apenas um stream de câmera esteja ativo por vez em todas as instâncias do WidgetUrlView.
     static _activeLiveStreamWidget = null;
+
+    _currentLiveImageElement = null;
 
     onInitialize() {
         super.onInitialize();
@@ -36,15 +35,16 @@ class WidgetUrlView extends CWidget {
      * @private
      */
     _showContent() {
-        // Limpa qualquer timeout de stream ao vivo existente para esta instância
-        if (this._liveStreamTimeoutId) {
-            clearTimeout(this._liveStreamTimeoutId);
-            this._liveStreamTimeoutId = null;
-        }
-
         // Se esta instância era a que estava transmitindo ao vivo, remove-a do rastreador estático
         if (WidgetUrlView._activeLiveStreamWidget === this) {
             WidgetUrlView._activeLiveStreamWidget = null;
+        }
+
+        // Antes de mudar o conteúdo, limpa a fonte do elemento de imagem do stream ao vivo anterior
+        // para forçar o navegador a encerrar a conexão e liberar recursos.
+        if (this._currentLiveImageElement) {
+            this._currentLiveImageElement.src = ''; // Interrompe explicitamente o stream
+            this._currentLiveImageElement = null; // Limpa a referência
         }
 
         const tipoIndex = Number(this._fields.tipo);
@@ -122,12 +122,6 @@ class WidgetUrlView extends CWidget {
                 WidgetUrlView._activeLiveStreamWidget._showContent(); // Reverte o outro widget
             }
 
-            // Limpa qualquer timeout existente antes de iniciar um novo stream para esta instância
-            /*if (this._liveStreamTimeoutId) {
-                clearTimeout(this._liveStreamTimeoutId);
-                this._liveStreamTimeoutId = null;
-            }*/
-
             // Define esta instância como a atualmente ativa para o stream ao vivo
             WidgetUrlView._activeLiveStreamWidget = this;
 
@@ -137,13 +131,10 @@ class WidgetUrlView extends CWidget {
             liveImg.style.height = '100%';
             liveImg.style.objectFit = 'contain';
 
+            this._currentLiveImageElement = liveImg;
+
             contentBox.innerHTML = ''; // Limpa a imagem estática e a sobreposição
             contentBox.appendChild(liveImg); // Exibe o stream ao vivo
-
-            // Define um timeout para voltar para a imagem estática após 15 segundos (15000 milissegundos)
-            /*this._liveStreamTimeoutId = setTimeout(() => {
-                this._showContent(); // Chama _showContent novamente para voltar à visualização estática
-            }, 15000); // 15 segundos*/
         });
     }
 }
