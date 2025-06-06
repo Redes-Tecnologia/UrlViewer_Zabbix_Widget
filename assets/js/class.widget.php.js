@@ -48,21 +48,54 @@ class WidgetUrlView extends CWidget {
         }
 
         const tipos = ['mjpeg', 'mjpg'];
-        const tipo = tipos[tipoIndex] ?? 'mjpeg'; // default mjpeg
+        const tipo = tipos[tipoIndex] ?? 'mjpeg';
 
         contentBox.innerHTML = '';
 
-        const url = `https://${serverIP}/camera_stream?ip=${cameraIP}&user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}&tipo=${encodeURIComponent(tipo)}&channel=${channel}`;
+        const staticImgUrl = `https://${serverIP}/camera_snapshot?ip=${cameraIP}&user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}&channel=${channel}`;
+        const streamUrl = `https://${serverIP}/camera_stream?ip=${cameraIP}&user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}&tipo=${encodeURIComponent(tipo)}&channel=${channel}`;
+
+        const container = document.createElement('div');
+        container.style.width = '100%';
+        container.style.height = '100%';
+        container.style.position = 'relative';
+        container.style.cursor = 'pointer';
 
         const img = document.createElement('img');
-        img.src = url;
+        img.src = staticImgUrl;
         img.style.width = '100%';
         img.style.height = '100%';
         img.style.objectFit = 'contain';
-        img.alt = 'Camera Stream';
 
-        contentBox.appendChild(img);
+        const overlay = document.createElement('div');
+        overlay.innerText = 'Clique para exibir ao vivo';
+        overlay.style.position = 'absolute';
+        overlay.style.top = '50%';
+        overlay.style.left = '50%';
+        overlay.style.transform = 'translate(-50%, -50%)';
+        overlay.style.color = 'white';
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
+        overlay.style.padding = '10px 20px';
+        overlay.style.borderRadius = '8px';
+        overlay.style.fontSize = '16px';
+        overlay.style.pointerEvents = 'none';
+
+        container.appendChild(img);
+        container.appendChild(overlay);
+        contentBox.appendChild(container);
+
+        container.addEventListener('click', () => {
+            const liveImg = document.createElement('img');
+            liveImg.src = streamUrl;
+            liveImg.style.width = '100%';
+            liveImg.style.height = '100%';
+            liveImg.style.objectFit = 'contain';
+
+            contentBox.innerHTML = '';
+            contentBox.appendChild(liveImg);
+        });
     }
+
 }
 
 if (typeof addWidgetClass === 'function') {
