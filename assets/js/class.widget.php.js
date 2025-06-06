@@ -2,6 +2,15 @@ class WidgetUrlView extends CWidget {
     onInitialize() {
         super.onInitialize();
         this._widgetBody = null;
+        this._streamTimeout = null;
+        this._isStreaming = false;
+
+        // Escuta eventos de outros widgets
+        window.addEventListener('cameraWidgetActivated', (e) => {
+            if (e.detail.widgetId !== this._id && this._isStreaming) {
+                this._stopStream(); // desativa o stream se não for este
+            }
+        });
     }
 
     setContents(response) {
@@ -17,87 +26,73 @@ class WidgetUrlView extends CWidget {
         contentBox.style.justifyContent = 'center';
         contentBox.style.alignItems = 'center';
         contentBox.style.backgroundColor = '#000';
+        contentBox.style.cursor = 'pointer';
 
         this._widgetBody.appendChild(contentBox);
 
-        this._showContent();
+        this._showSnapshot();
+
+        contentBox.addEventListener('click', () => this._showStreamTemporarily());
     }
 
-    _showContent() {
+    _getSnapshotUrl() {
+        const { serverIP, cameraIP, user, password, channel } = this._fields;
+        return `http://${serverIP}/camera_snapshot?ip=${cameraIP}&user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}&channel=${channel}`;
+    }
+
+    _getStreamUrl() {
         const tipoIndex = Number(this._fields.tipo);
-        const serverIP = this._fields.serverIP?.trim();
-        const serverPort = this._fields.serverPort?.trim();
-        const cameraIP = this._fields.cameraIP?.trim();
-        const channel = this._fields.channel?.trim();
-        const user = this._fields.user?.trim();
-        const password = this._fields.password?.trim();
-
-        const contentBox = this._widgetBody.querySelector('#urlContentBox');
-
-        if (!serverIP || !serverPort || !cameraIP || !user || !password || !channel) {
-            console.error("Campos obrigatórios não preenchidos.");
-            if (contentBox) {
-                contentBox.innerHTML = '<p style="color: white;">Campos obrigatórios não configurados.</p>';
-            }
-            return;
-        }
-
-        if (!contentBox) {
-            console.error("Elemento contentBox não encontrado.");
-            return;
-        }
-
         const tipos = ['mjpeg', 'mjpg'];
         const tipo = tipos[tipoIndex] ?? 'mjpeg';
 
-        contentBox.innerHTML = '';
-
-        const staticImgUrl = `https://${serverIP}/camera_snapshot?ip=${cameraIP}&user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}&channel=${channel}`;
-        const streamUrl = `https://${serverIP}/camera_stream?ip=${cameraIP}&user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}&tipo=${encodeURIComponent(tipo)}&channel=${channel}`;
-
-        const container = document.createElement('div');
-        container.style.width = '100%';
-        container.style.height = '100%';
-        container.style.position = 'relative';
-        container.style.cursor = 'pointer';
-
-        const img = document.createElement('img');
-        img.src = staticImgUrl;
-        img.style.width = '100%';
-        img.style.height = '100%';
-        img.style.objectFit = 'contain';
-
-        const overlay = document.createElement('div');
-        overlay.innerText = 'Clique para exibir ao vivo';
-        overlay.style.position = 'absolute';
-        overlay.style.top = '50%';
-        overlay.style.left = '50%';
-        overlay.style.transform = 'translate(-50%, -50%)';
-        overlay.style.color = 'white';
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
-        overlay.style.padding = '10px 20px';
-        overlay.style.borderRadius = '8px';
-        overlay.style.fontSize = '16px';
-        overlay.style.pointerEvents = 'none';
-
-        container.appendChild(img);
-        container.appendChild(overlay);
-        contentBox.appendChild(container);
-
-        container.addEventListener('click', () => {
-            const liveImg = document.createElement('img');
-            liveImg.src = streamUrl;
-            liveImg.style.width = '100%';
-            liveImg.style.height = '100%';
-            liveImg.style.objectFit = 'contain';
-
-            contentBox.innerHTML = '';
-            contentBox.appendChild(liveImg);
-        });
+        const { serverIP, cameraIP, user, password, channel } = this._fields;
+        return `http://${serverIP}/camera_stream?ip=${cameraIP}&user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}&tipo=${encodeURIComponent(tipo)}&channel=${channel}`;
     }
 
-}
+    _showSnapshot() {
+        const contentBox = this._widgetBody.querySelector('#urlContentBox');
+        if (!contentBox) return;
 
-if (typeof addWidgetClass === 'function') {
-    addWidgetClass(WidgetUrlView);
+        this._isStreaming = false;
+        contentBox.innerHTML = '';
+
+        const snapshot = document.createElement('img');
+        snapshot.src = this._getSnapshotUrl();
+        snapshot.style.width = '100%';
+        snapshot.style.height = '100%';
+        snapshot.style.objectFit = 'contain';
+        snapshot.alt = 'Snapshot da câmera';
+        contentBox.appendChild(snapshot);
+    }
+
+    _stopStream() {
+        clearTimeout(this._streamTimeout);
+        this._showSnapshot();
+    }
+
+    _showStreamTemporarily(duration = 15000) {
+        const contentBox = this._widgetBody.querySelector('#urlContentBox');
+        if (!contentBox) return;
+
+        // Notifica outros widgets que este foi ativado
+        window.dispatchEvent(new CustomEvent('cameraWidgetActivated', {
+            detail: { widgetId: this._id }
+        }));
+
+        clearTimeout(this._streamTimeout);
+        this._isStreaming = true;
+
+        contentBox.innerHTML = '';
+        const stream = document.createElement('img');
+        stream.src = this._getStreamUrl();
+        stream.style.width = '100%';
+        stream.style.height = '100%';
+        stream.style.objectFit = 'contain';
+        stream.alt = 'Stream da câmera';
+        contentBox.appendChild(stream);
+
+        this._streamTimeout = setTimeout(() => {
+            this._stopStream();
+        }, duration);
+    }
 }
