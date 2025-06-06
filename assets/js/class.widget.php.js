@@ -1,8 +1,5 @@
 class WidgetUrlView extends CWidget {
-    // Variável estática para rastrear a instância do widget de stream ao vivo atualmente ativa.
-    // Isso garante que apenas um stream de câmera esteja ativo por vez em todas as instâncias do WidgetUrlView.
     static _activeLiveStreamWidget = null;
-
     _currentLiveImageElement = null;
 
     onInitialize() {
@@ -35,16 +32,13 @@ class WidgetUrlView extends CWidget {
      * @private
      */
     _showContent() {
-        // Se esta instância era a que estava transmitindo ao vivo, remove-a do rastreador estático
         if (WidgetUrlView._activeLiveStreamWidget === this) {
             WidgetUrlView._activeLiveStreamWidget = null;
         }
 
-        // Antes de mudar o conteúdo, limpa a fonte do elemento de imagem do stream ao vivo anterior
-        // para forçar o navegador a encerrar a conexão e liberar recursos.
         if (this._currentLiveImageElement) {
-            this._currentLiveImageElement.src = ''; // Interrompe explicitamente o stream
-            this._currentLiveImageElement = null; // Limpa a referência
+            this._currentLiveImageElement.src = '';
+            this._currentLiveImageElement = null;
         }
 
         const tipoIndex = Number(this._fields.tipo);
@@ -57,7 +51,6 @@ class WidgetUrlView extends CWidget {
 
         const contentBox = this._widgetBody.querySelector('#urlContentBox');
 
-        // Verifica campos obrigatórios e exibe erro se estiverem faltando
         if (!serverIP || !serverPort || !cameraIP || !user || !password || !channel) {
             console.error("Campos obrigatórios não preenchidos.");
             if (contentBox) {
@@ -66,18 +59,16 @@ class WidgetUrlView extends CWidget {
             return;
         }
 
-        // Garante que o elemento contentBox exista
         if (!contentBox) {
             console.error("Elemento contentBox não encontrado.");
             return;
         }
 
         const tipos = ['mjpeg', 'mjpg'];
-        const tipo = tipos[tipoIndex] ?? 'mjpeg'; // Padrão para 'mjpeg' se tipoIndex for inválido
+        const tipo = tipos[tipoIndex] ?? 'mjpeg';
 
-        contentBox.innerHTML = ''; // Limpa conteúdo anterior
+        contentBox.innerHTML = '';
 
-        // Constrói URLs para imagem estática e stream ao vivo
         const staticImgUrl = `https://${serverIP}/camera_snapshot?ip=${cameraIP}&user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}&channel=${channel}`;
         const streamUrl = `https://${serverIP}/camera_stream?ip=${cameraIP}&user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}&tipo=${encodeURIComponent(tipo)}&channel=${channel}`;
 
@@ -86,15 +77,25 @@ class WidgetUrlView extends CWidget {
         container.style.width = '100%';
         container.style.height = '100%';
         container.style.position = 'relative';
-        container.style.cursor = 'pointer'; // Indica que é clicável
+        container.style.cursor = 'pointer';
 
         // Cria o elemento da imagem estática
         const img = document.createElement('img');
         img.src = staticImgUrl;
         img.style.width = '100%';
         img.style.height = '100%';
-        img.style.objectFit = 'contain'; // Garante que a imagem se ajuste sem distorção
+        img.style.objectFit = 'contain';
 
+        // NOVO: Adiciona um filtro CSS para escurecer a imagem
+        // img.style.filter = 'brightness(50%)'; // Escurece para 50% do brilho original
+        // img.style.filter = 'grayscale(100%) brightness(70%)'; // Exemplo: P&B e escurece um pouco
+
+        // MÉTODOS RECOMENDADOS para o efeito escuro
+        // Opção 1: Overlay com pseudo-elemento (mais robusto)
+        // Para usar isso, você adicionaria uma classe CSS ao container e definiria o pseudo-elemento lá.
+        // Já que estamos fazendo direto no JS, vamos usar uma div de overlay.
+
+        // Opção 2: Adicionar uma div de overlay para escurecer
         const darkOverlay = document.createElement('div');
         darkOverlay.style.position = 'absolute';
         darkOverlay.style.top = '0';
@@ -102,8 +103,8 @@ class WidgetUrlView extends CWidget {
         darkOverlay.style.width = '100%';
         darkOverlay.style.height = '100%';
         darkOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.4)'; // Preto com 40% de opacidade
-        darkOverlay.style.zIndex = '1'; // Acima da imagem
-        darkOverlay.style.pointerEvents = 'none'; // Permite que os cliques passem
+        darkOverlay.style.zIndex = '1'; // Para ficar acima da imagem, mas abaixo da mensagem de overlay
+        darkOverlay.style.pointerEvents = 'none'; // Permite cliques passarem
 
         // Cria a mensagem de sobreposição para clicar e ver ao vivo
         const overlay = document.createElement('div');
@@ -117,24 +118,20 @@ class WidgetUrlView extends CWidget {
         overlay.style.padding = '10px 20px';
         overlay.style.borderRadius = '8px';
         overlay.style.fontSize = '16px';
-        overlay.style.zIndex = '2'; // Acima do overlay escuro
-        overlay.style.pointerEvents = 'none'; // Permite que os cliques passem para o contêiner
+        overlay.style.zIndex = '2'; // Garante que a mensagem esteja acima do overlay escuro
+        overlay.style.pointerEvents = 'none';
 
         // Anexa imagem e sobreposição ao contêiner
         container.appendChild(img);
-        container.appendChild(darkOverlay); // Adiciona o overlay escuro AQUI
+        container.appendChild(darkOverlay); // Adiciona o overlay escuro
         container.appendChild(overlay);
-        contentBox.appendChild(container); // Adiciona contêiner à caixa de conteúdo principal
+        contentBox.appendChild(container);
 
-        // Adiciona ouvinte de evento de clique para alternar para o stream ao vivo
         container.addEventListener('click', () => {
-            // Se já houver um widget de stream ao vivo ativo, e não for esta instância,
-            // força o outro widget a voltar para a imagem estática.
             if (WidgetUrlView._activeLiveStreamWidget && WidgetUrlView._activeLiveStreamWidget !== this) {
-                WidgetUrlView._activeLiveStreamWidget._showContent(); // Reverte o outro widget
+                WidgetUrlView._activeLiveStreamWidget._showContent();
             }
 
-            // Define esta instância como a atualmente ativa para o stream ao vivo
             WidgetUrlView._activeLiveStreamWidget = this;
 
             const liveImg = document.createElement('img');
@@ -145,13 +142,12 @@ class WidgetUrlView extends CWidget {
 
             this._currentLiveImageElement = liveImg;
 
-            contentBox.innerHTML = ''; // Limpa a imagem estática e a sobreposição
-            contentBox.appendChild(liveImg); // Exibe o stream ao vivo
+            contentBox.innerHTML = '';
+            contentBox.appendChild(liveImg);
         });
     }
 }
 
-// Registra a classe do widget se a função addWidgetClass estiver disponível
 if (typeof addWidgetClass === 'function') {
     addWidgetClass(WidgetUrlView);
 }
