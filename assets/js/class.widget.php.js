@@ -3,14 +3,6 @@ class WidgetUrlView extends CWidget {
         super.onInitialize();
         this._widgetBody = null;
         this._streamTimeout = null;
-        this._isStreaming = false;
-
-        // Escuta eventos de outros widgets
-        window.addEventListener('cameraWidgetActivated', (e) => {
-            if (e.detail.widgetId !== this._id && this._isStreaming) {
-                this._stopStream(); // desativa o stream se não for este
-            }
-        });
     }
 
     setContents(response) {
@@ -53,9 +45,7 @@ class WidgetUrlView extends CWidget {
         const contentBox = this._widgetBody.querySelector('#urlContentBox');
         if (!contentBox) return;
 
-        this._isStreaming = false;
         contentBox.innerHTML = '';
-
         const snapshot = document.createElement('img');
         snapshot.src = this._getSnapshotUrl();
         snapshot.style.width = '100%';
@@ -65,22 +55,11 @@ class WidgetUrlView extends CWidget {
         contentBox.appendChild(snapshot);
     }
 
-    _stopStream() {
-        clearTimeout(this._streamTimeout);
-        this._showSnapshot();
-    }
-
-    _showStreamTemporarily(duration = 15000) {
+    _showStreamTemporarily(duration = 15000) { // 15 segundos
         const contentBox = this._widgetBody.querySelector('#urlContentBox');
         if (!contentBox) return;
 
-        // Notifica outros widgets que este foi ativado
-        window.dispatchEvent(new CustomEvent('cameraWidgetActivated', {
-            detail: { widgetId: this._id }
-        }));
-
-        clearTimeout(this._streamTimeout);
-        this._isStreaming = true;
+        clearTimeout(this._streamTimeout); // evita múltiplos timeouts
 
         contentBox.innerHTML = '';
         const stream = document.createElement('img');
@@ -91,8 +70,13 @@ class WidgetUrlView extends CWidget {
         stream.alt = 'Stream da câmera';
         contentBox.appendChild(stream);
 
+        // Voltar para snapshot depois de alguns segundos
         this._streamTimeout = setTimeout(() => {
-            this._stopStream();
+            this._showSnapshot();
         }, duration);
     }
+}
+
+if (typeof addWidgetClass === 'function') {
+    addWidgetClass(WidgetUrlView);
 }
