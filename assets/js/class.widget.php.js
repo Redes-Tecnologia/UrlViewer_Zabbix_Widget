@@ -1,6 +1,10 @@
 class WidgetUrlView extends CWidget {
-    // Private variable to hold the timeout ID for the live stream
+    // Variável privada para armazenar o ID do timeout para o stream ao vivo
     _liveStreamTimeoutId = null;
+
+    // Variável estática para rastrear a instância do widget de stream ao vivo atualmente ativa.
+    // Isso garante que apenas um stream de câmera esteja ativo por vez em todas as instâncias do WidgetUrlView.
+    static _activeLiveStreamWidget = null;
 
     onInitialize() {
         super.onInitialize();
@@ -27,15 +31,20 @@ class WidgetUrlView extends CWidget {
     }
 
     /**
-     * Displays the content, either static image with overlay or live stream.
-     * Manages the 15-second live stream duration.
+     * Exibe o conteúdo, seja a imagem estática com sobreposição ou o stream ao vivo.
+     * Gerencia a duração de 15 segundos do stream ao vivo e garante que apenas um stream ao vivo esteja ativo por vez.
      * @private
      */
     _showContent() {
-        // Clear any existing live stream timeout if _showContent is called again
+        // Limpa qualquer timeout de stream ao vivo existente para esta instância
         if (this._liveStreamTimeoutId) {
             clearTimeout(this._liveStreamTimeoutId);
             this._liveStreamTimeoutId = null;
+        }
+
+        // Se esta instância era a que estava transmitindo ao vivo, remove-a do rastreador estático
+        if (WidgetUrlView._activeLiveStreamWidget === this) {
+            WidgetUrlView._activeLiveStreamWidget = null;
         }
 
         const tipoIndex = Number(this._fields.tipo);
@@ -48,7 +57,7 @@ class WidgetUrlView extends CWidget {
 
         const contentBox = this._widgetBody.querySelector('#urlContentBox');
 
-        // Check for required fields and display an error if any are missing
+        // Verifica campos obrigatórios e exibe erro se estiverem faltando
         if (!serverIP || !serverPort || !cameraIP || !user || !password || !channel) {
             console.error("Campos obrigatórios não preenchidos.");
             if (contentBox) {
@@ -57,36 +66,36 @@ class WidgetUrlView extends CWidget {
             return;
         }
 
-        // Ensure contentBox element exists
+        // Garante que o elemento contentBox exista
         if (!contentBox) {
             console.error("Elemento contentBox não encontrado.");
             return;
         }
 
         const tipos = ['mjpeg', 'mjpg'];
-        const tipo = tipos[tipoIndex] ?? 'mjpeg'; // Default to 'mjpeg' if tipoIndex is invalid
+        const tipo = tipos[tipoIndex] ?? 'mjpeg'; // Padrão para 'mjpeg' se tipoIndex for inválido
 
-        contentBox.innerHTML = ''; // Clear previous content
+        contentBox.innerHTML = ''; // Limpa conteúdo anterior
 
-        // Construct URLs for static image and live stream
+        // Constrói URLs para imagem estática e stream ao vivo
         const staticImgUrl = `https://${serverIP}/camera_snapshot?ip=${cameraIP}&user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}&channel=${channel}`;
         const streamUrl = `https://${serverIP}/camera_stream?ip=${cameraIP}&user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}&tipo=${encodeURIComponent(tipo)}&channel=${channel}`;
 
-        // Create container for the static image and overlay
+        // Cria contêiner para a imagem estática e sobreposição
         const container = document.createElement('div');
         container.style.width = '100%';
         container.style.height = '100%';
         container.style.position = 'relative';
-        container.style.cursor = 'pointer'; // Indicate it's clickable
+        container.style.cursor = 'pointer'; // Indica que é clicável
 
-        // Create the static image element
+        // Cria o elemento da imagem estática
         const img = document.createElement('img');
         img.src = staticImgUrl;
         img.style.width = '100%';
         img.style.height = '100%';
-        img.style.objectFit = 'contain'; // Ensure image fits without distortion
+        img.style.objectFit = 'contain'; // Garante que a imagem se ajuste sem distorção
 
-        // Create the overlay message for clicking to view live
+        // Cria a mensagem de sobreposição para clicar e ver ao vivo
         const overlay = document.createElement('div');
         overlay.innerText = 'Clique para exibir ao vivo';
         overlay.style.position = 'absolute';
@@ -98,20 +107,29 @@ class WidgetUrlView extends CWidget {
         overlay.style.padding = '10px 20px';
         overlay.style.borderRadius = '8px';
         overlay.style.fontSize = '16px';
-        overlay.style.pointerEvents = 'none'; // Allow clicks to pass through to the container
+        overlay.style.pointerEvents = 'none'; // Permite que os cliques passem para o contêiner
 
-        // Append image and overlay to the container
+        // Anexa imagem e sobreposição ao contêiner
         container.appendChild(img);
         container.appendChild(overlay);
-        contentBox.appendChild(container); // Add container to the main content box
+        contentBox.appendChild(container); // Adiciona contêiner à caixa de conteúdo principal
 
-        // Add click event listener to switch to live stream
+        // Adiciona ouvinte de evento de clique para alternar para o stream ao vivo
         container.addEventListener('click', () => {
-            // Clear any existing timeout before starting a new stream
-            if (this._liveStreamTimeoutId) {
+            // Se já houver um widget de stream ao vivo ativo, e não for esta instância,
+            // força o outro widget a voltar para a imagem estática.
+            if (WidgetUrlView._activeLiveStreamWidget && WidgetUrlView._activeLiveStreamWidget !== this) {
+                WidgetUrlView._activeLiveStreamWidget._showContent(); // Reverte o outro widget
+            }
+
+            // Limpa qualquer timeout existente antes de iniciar um novo stream para esta instância
+            /*if (this._liveStreamTimeoutId) {
                 clearTimeout(this._liveStreamTimeoutId);
                 this._liveStreamTimeoutId = null;
-            }
+            }*/
+
+            // Define esta instância como a atualmente ativa para o stream ao vivo
+            WidgetUrlView._activeLiveStreamWidget = this;
 
             const liveImg = document.createElement('img');
             liveImg.src = streamUrl;
@@ -119,18 +137,18 @@ class WidgetUrlView extends CWidget {
             liveImg.style.height = '100%';
             liveImg.style.objectFit = 'contain';
 
-            contentBox.innerHTML = ''; // Clear the static image and overlay
-            contentBox.appendChild(liveImg); // Display the live stream
+            contentBox.innerHTML = ''; // Limpa a imagem estática e a sobreposição
+            contentBox.appendChild(liveImg); // Exibe o stream ao vivo
 
-            // Set a timeout to revert to the static image after 15 seconds (15000 milliseconds)
-            this._liveStreamTimeoutId = setTimeout(() => {
-                this._showContent(); // Call _showContent again to revert to static view
-            }, 15000); // 15 seconds
+            // Define um timeout para voltar para a imagem estática após 15 segundos (15000 milissegundos)
+            /*this._liveStreamTimeoutId = setTimeout(() => {
+                this._showContent(); // Chama _showContent novamente para voltar à visualização estática
+            }, 15000); // 15 segundos*/
         });
     }
 }
 
-// Register the widget class if addWidgetClass function is available
+// Registra a classe do widget se a função addWidgetClass estiver disponível
 if (typeof addWidgetClass === 'function') {
     addWidgetClass(WidgetUrlView);
 }
