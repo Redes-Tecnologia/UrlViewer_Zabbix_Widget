@@ -95,6 +95,16 @@ class WidgetUrlView extends CWidget {
         img.style.height = '100%';
         img.style.objectFit = 'contain'; // Garante que a imagem se ajuste sem distorção
 
+        const darkOverlay = document.createElement('div');
+        darkOverlay.style.position = 'absolute';
+        darkOverlay.style.top = '0';
+        darkOverlay.style.left = '0';
+        darkOverlay.style.width = '100%';
+        darkOverlay.style.height = '100%';
+        darkOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.4)'; // Preto com 40% de opacidade
+        darkOverlay.style.zIndex = '1'; // Acima da imagem
+        darkOverlay.style.pointerEvents = 'none'; // Permite que os cliques passem
+
         // Cria a mensagem de sobreposição para clicar e ver ao vivo
         const overlay = document.createElement('div');
         overlay.innerText = 'Clique para exibir ao vivo';
@@ -107,10 +117,12 @@ class WidgetUrlView extends CWidget {
         overlay.style.padding = '10px 20px';
         overlay.style.borderRadius = '8px';
         overlay.style.fontSize = '16px';
+        overlay.style.zIndex = '2'; // Acima do overlay escuro
         overlay.style.pointerEvents = 'none'; // Permite que os cliques passem para o contêiner
 
         // Anexa imagem e sobreposição ao contêiner
         container.appendChild(img);
+        container.appendChild(darkOverlay); // Adiciona o overlay escuro AQUI
         container.appendChild(overlay);
         contentBox.appendChild(container); // Adiciona contêiner à caixa de conteúdo principal
 
