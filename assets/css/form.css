@@ -1,0 +1,11 @@
+.logo-redes:before {
+    content: '';
+    background: url('../img/redes_logo_nome.png');
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-clip: padding-box;
+    display: flex;
+    height: 2rem;
+    margin: 2rem 0;
+}
